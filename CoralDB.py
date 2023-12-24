@@ -37,6 +37,69 @@ class db:
         a = sys.argv([0][::-1][10:][::-1]).replace('\\','/')
         return f"{str(a)}/{self.location}"
 
+    def __len__(self):
+        with open(self.location,"r") as f:
+            a = f.readlines()
+            b = 0
+            for i in range(len(a)):
+                b += len(str(a[i]))
+
+            return b
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        with open(self.location,"r") as f:
+            a = f.readlines()
+        self.i = (self.i + 1) % len(a)
+        return a[self.i]
+
+    def read(self,*,line = "all"):
+        '''
+        This program lets you read
+        the file you wrote, either all of it
+        (with line = 'all')
+        or only a specific line.
+        '''
+        if line != "all" and isinstance(line, int) != True:
+            raise SyntaxError("The line that is going to be read has to be an integer or 'all', not ({}).".format(line))
+        
+        with open(self.location,"r") as f:
+            a = f.readlines()
+
+            if isinstance(line, int) == True:
+                if line <= 0:
+                    raise IndexError("The line has to be a natural number, not zero or negative.")
+                elif line > len(a):
+                    raise MemoryError("There is no access to memory that has not been created.")
+            
+            if line == "all":
+                for i in range(len(a)):
+                    print(a[i])
+            elif line:
+                print(a[line])
+
+    def read_all_by_line(self,*,loop=True):
+        '''
+        It's a generator which
+        yields the lines of the files,
+        so you can read the lines
+        one by one.
+        It loops if you want to.
+        '''
+        if isinstance(loop, bool) != True:
+            raise SyntaxError("Loop has to be a bool.")
+        with open(self.location,"r") as f:
+            a = f.readlines()
+        for i in range(0, len(a)+1):
+            if i == len(a) and loop == True:
+                i = 0
+                print("It loops back all over again.")
+            elif i == len(a):
+                return "Done"
+            yield a[i]
+
     def data_alloc(self, data, location1, location2,*, mode: str = "-w"):
         '''
         Allocates any data to a text file:
@@ -170,6 +233,8 @@ def help_main():
 
     print("The available functions of the  last version of this program (24/Dec/2023) are:\n\ndata_alloc(data, location1, location2,*,mode (it has to be '-w', '-a' or '-s')):\nIt allocates data from a directory to another one. It can assign all data from a file if data is -1 (not string -1, integer -1)\nTip: if you assign location1 and location2 the same directory, you can rewrite or append data to your file.")
     print("\n\nmake_dir(dir_location (must not exist beforehand)):\nIt will create a new folder, you can use it to store data in folder and access the files more easily.\n")
+    print("\nread(self,*,line=<int var>)\nThe function prints all of the lines (if <var> == 'all') or only one line (if <var> is greater than 0)\n")
+    print("\nread_all_by_line(self)\nIt's a generator which yields the lines of text of the db instance.\n")
     print("\nAfter seeing what class db has to offer, there are more functions:\n\nchange_main_dir(new_dir (must not exist beforehand)):\nIt changes the main directory in which the program is working on.\nBeware of its uses, because you could do a great damage to yourself if misused.")
 
     print("\nYou can always check these instructions with help(), see you later user!\n\n")
