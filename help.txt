@@ -1,0 +1,74 @@
+Welcome new user!
+
+I'm CyberCoral, the creator of this program and this help() function will serve you as a guide for using the program.
+
+The first thing is that you can initialize a db() instance by putting in the shell:
+
+<var> = db(<value>,<file>)
+
+If <file> doesn't exist, the program will create one automatically.
+
+The available functions of the  last version of this program (27/Dec/2023) are:
+
+one_liner_file():
+Returns an one-liner version of the file.
+
+read(self,*,line=<int var>)
+The function prints all of the lines (if <var> == 'all') or only one line (if <var> is greater than 0)
+
+read_all_by_line(self)
+It's a generator which yields the lines of text of the db instance.
+
+data_alloc(data, location1, location2,*,mode (it has to be '-w', '-a' or '-s')):
+It allocates data from a directory to another one. It can assign all data from a file if data is -1 (not string -1, integer -1)
+"-w" mode : write mode = Writes or overwrites data from location1 to location2.
+"-a" mode : append mode = Appends data from location1 to the end of location2.
+"-s" mode : swap mode = Swaps lines which contain data from location1 to location2.
+Tip: if you assign location1 to None, you can rewrite or append data to your file in location2.
+
+gen_security_key(magic_word,*, own_location (default is False)):
+Generates a security key or pass key which can be used in give_permissions(), replace_all() and delete(). It should not be stored in the same place as your database.
+
+give_permissions(*,key_location, permission (it must be a natural number greater than 1)):
+Gives permissions to the file the user who has the correct key_location and magic_word arguments specified.
+
+search(data_to_search (it can be a list or string),*, dir_location (by default it's None), times (by default it's 1, it must be either -1 or a non-zero natural number), amplitude (it must be either -1 or a natural number greater than len(data_to_search), list_format (by default it's True), mute (by default it's False)):
+- It searches for any instance of data_to_search elements (one or more key words) in dir_location (if it's None, it searches for self.location, but the file must exist either way).
+- It does that a number of <times> times (if -1, it will continue until there are no matches).
+- It makes a search every <amplitude> elements, with a range of <amplitude> indices (if -1, the amplitude will match the length of data_to_search()).
+- It can show the data depending on list_format (if will be printed if list_format equals 0, else the list will be returned as is.
+- You can control if you want to print the results or not, by putting mute = True or mute = False.
+
+search_all(data_to_search,*,directory (by default it's the directory you are working in), times, amplitude, list_format):
+- It searches for any instance of data_to_search elements in all of the files of the selected directory.
+- It has the same functions as with search.
+
+replace(*,data_to_search,replace_word,dir_location (by default, it's self.location), times = (by default it's -1, but it must be either -1 or a non-zero natural number), mute (by default it's False)):
+- It replaces any instance of data_to_search elements (one or more key words) in dir_location (if it's None, it searches for self.location, but the file must exist either way).
+- It replaces <times> times and (if -1, it will continue until there are no matches).
+- The result can be muted with mute equal to True.
+- It does not need admin.
+
+replace_all(*,data_to_search,replace_word,directory (by default, it's the folder you are working on), times = (by default it's -1, but it must be either -1 or a non-zero natural number), key_location, magic_word, mute (by default it's False)):
+- It replaces any instance of data_to_search elements (one or more key words) in all of the files of the selected directory.
+- It replaces <times> times and (if -1, it will continue until there are no matches).
+- The result can be muted with mute equal to True.
+- It does not need admin.
+- It works the same as replace().
+
+
+delete(dir_location,*, key_location, magic_word):
+It deletes a specific file from dir_location. You need admin rights and you get them by introducing the correct key_location and magic_word.
+
+
+make_dir(dir_location (must not exist beforehand)):
+It will create a new folder, you can use it to store data in folder and access the files more easily.
+
+After seeing what class db has to offer, there are more functions:
+
+change_main_dir(new_dir (must not exist beforehand)):
+It changes the main directory in which the program is working on.
+Beware of its uses, because you could do a great damage to yourself if misused.
+
+You can always check these instructions with help_main(), see you later user! 
+
