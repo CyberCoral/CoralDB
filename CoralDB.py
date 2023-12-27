@@ -36,7 +36,7 @@ class db:
 
     def __str__(self):
         a = sys.argv[0][::-1][10:][::-1].replace('\\','/')
-        return f"{str(a)}/{self.location}"
+        return f"{str(a)}{self.location}"
 
     def __len__(self):
         with open(self.location,"r") as f:
