@@ -13,7 +13,7 @@
 #
 
 # built-in
-import os, sys, re
+import os, sys
 
 # main directory of file
 current_dir = sys.argv[0][::-1][10:][::-1].replace("\\","/")
@@ -172,7 +172,7 @@ class db:
                         if i == len(data_loose):
                             print(f"Data ({data}) has not been found from location1 ({location1}).")
                             return 1
-                        elif re.search(data, data_loose[i]) != None:
+                        elif data_loose[i] in data:
                             print(f"Data ({data}) has been successfully retrieved from location1 ({location1}).")
                             data = (data, location1, i)
                             break
@@ -290,8 +290,8 @@ class db:
         try:
             with open(key_location,"r") as f:
                 magic_word_0 = f.readlines()[0]
-                if magic_word != magic_word_0:
-                    raise KeyError("Not valid key.")
+                if magic_word not in magic_word_0 or magic_word.index(magic_word_0) != 0:
+                    raise KeyError("Not valid pass key.")
         except FileNotFoundError:
             raise KeyError("The location of the key does not exist.")
         
@@ -301,7 +301,7 @@ class db:
 
         return 0
 
-    def search(self, data_to_search, *, dir_location: str = None, times = 1, amplitude: int = -1,  list_format: bool = True, mute: bool = False):
+    def search(self, data_to_search, *, dir_location: str = None, times = 1, list_format: bool = True, mute: bool = False):
         '''
         Searches instances of
         data (data_to_search),
@@ -309,13 +309,6 @@ class db:
         an int(times) number of times.
         The directory that is being used
         must have enough permissions.
-
-        The amplitude determines the
-        number of characters
-        searched at a time.
-        
-        - If amplitude equals -1, it will be
-        relative to len(data_to_search)
 
         - If times equals -1, it will check for
         all the possible matches.
@@ -340,13 +333,8 @@ class db:
         elif times < 0:
             raise ValueError("times must be a natural number.")
 
-        if isinstance(amplitude, int) != True:
-            raise TypeError("amplitude must be an int.")
         elif times < 1 and times != -1:
             raise ValueError("amplitude must be greater than 1.")
-        elif amplitude < len(data_to_search) and amplitude != -1:
-            raise IndexError("amplitude must be greater than the length of the string 'data_to_search'.")
-        
 
         if isinstance(list_format, bool) != True:
             return TypeError("list_format must be a bool.")
@@ -360,10 +348,6 @@ class db:
         except OSError:
             raise SyntaxError("The file returned OSError, maybe you asked for a folder in {}?".format(dir_location))
 
-
-        # A list which registers the regex searches done by re.search()
-        boo = []
-
         i = 0
         # Converts all the data into a one-liner for a moment
         a = "".join(a)
@@ -373,35 +357,23 @@ class db:
 
         # A static variable.
         len_a=len(a)
-        
-        while times > 0 or times == -1:
-            c = 0
-            
-            if increment >= len_a:
-                break
-            
-            for k in range(len(data_to_search)):
-                
-                if amplitude == -1:
-                    amplitude = len(data_to_search[k])
-                    
-                b = re.search(data_to_search[k],a[(i*amplitude):(i+1)*amplitude])
 
-                boo.append(b)
+        for k in range(len(data_to_search)):
+            
+            a_="".join(a)
+            
+            while times > 0 or times == -1:
+                c = 0
+                
+                b = find2(a_, data_to_search[k]) 
                 
                 if b is not None:
-                    c = b.end()
-                    results.append([a[b.start():b.end()],(b.start()+increment,b.end()+increment)])
+                    c = b[1][1]
+                    results.append([b[0],b[1]])
                     if times != -1:
                         times -= 1
-                    i = 0
-                
-                else:
-                    i += 1
-                    c = i*(amplitude+1)
-
-                increment += c
-                a = a[c:]
+                       
+                    a_ = a_[c:]
 
         if mute != True:
             print("The total successful matches are {}.".format(len(results)))
@@ -482,6 +454,7 @@ class db:
         elif isinstance(data_to_search, str) == True:
             data_to_search = [data_to_search]
 
+
         if isinstance(mute, bool) != True:
             raise TypeError("")
             
@@ -493,7 +466,9 @@ class db:
         if isinstance(times, int) != True:
             raise TypeError("times must be an int.")
         elif times < 0 and times != -1:
-            raise ValueError("times must be a natural number.")        
+            raise ValueError("times must be a natural number.")
+
+        replace_word = str(replace_word)
         
         try:
             with open(dir_location,"r") as f:
@@ -522,14 +497,14 @@ class db:
                 
                 for k in range(len(data_to_search)):
                         
-                    b = re.search(data_to_search[k],a[i])
+                    b =  data_to_search[k] in a[i]
                     
-                    if b is not None:
+                    if b == True:
                         a[i] = a[i].replace(data_to_search[k],replace_word)
                         if times != -1:
                             times -= 1
                     
-                f.write(f"{a[i]}\n")
+                f.write((lambda a: f"{a[i]}\n" if a[i] != "" else f"{a[i]}")(a))
                 i += 1
                                         
         if mute != True:
@@ -564,15 +539,15 @@ class db:
         try:
             with open(key_location,"r") as f:
                 magic_word_0 = f.readlines()[0]
-                if re.search(magic_word, magic_word_0) == None:
-                    raise KeyError("Not valid pass key.")
-                elif re.search(magic_word, magic_word_0).start() != 0:
+                if magic_word not in magic_word_0 or magic_word.index(magic_word_0) != 0:
                     raise KeyError("Not valid pass key.")
                     
         except FileNotFoundError:
             raise KeyError("The location of the key does not exist.")
         
         print("The directory that was introduced is named:\n{}\n".format(directory))
+
+        replace_word = str(replace_word)
 
         possible_dirs = os.listdir(path = directory)
 
@@ -604,8 +579,8 @@ class db:
         try:
             with open(key_location,"r") as f:
                 magic_word_0 = f.readlines()[0]
-                if magic_word != magic_word_0:
-                    raise KeyError("Not valid key.")
+                if magic_word not in magic_word_0 or magic_word.index(magic_word_0) != 0:
+                    raise KeyError("Not valid pass key.")
         except FileNotFoundError:
             raise KeyError("The location of the key does not exist.")
         
@@ -648,7 +623,19 @@ def change_main_dir(new_dir: str = None):
         except FileNotFoundError:
             print(f"The directory ({current_dir}/{new_dir}) has not been created yet.\nUse make_dir() in class db first and then use this, with caution of course.")
             return 0
-        
+
+def find2(a:str,b:str):
+    '''
+    Finds "b" string in
+    "a" string.
+    '''
+    a,b = str(a),str(b)
+    result = []
+    while b in a:
+        c = a.index(b)
+        result.append((b,(c,c+len(b))))
+        a = a[c+1:]
+    return result
 
 def help_main():
     '''
