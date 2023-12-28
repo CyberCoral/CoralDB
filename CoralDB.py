@@ -70,7 +70,7 @@ class db:
         if empty_files == False:
             try:
                 while True:
-                    del a[a.index([])]
+                    del a[a.index("\n")]
             except ValueError:
                 pass
         return len(a)
