@@ -4,7 +4,7 @@
 ##                                                  ##
 ######################################################
 
-# ver. Wed/27/Dec/2023
+# ver. Thu/27/Dec/2023
 #
 # Made by: CyberCoral
 # ------------------------------------------------
@@ -36,7 +36,7 @@ class db:
 
     def __str__(self):
         a = sys.argv[0][::-1][10:][::-1].replace('\\','/')
-        return f"{str(a)}{self.location}"
+        return f"{str(a)}/{self.location}"
 
     def __len__(self):
         with open(self.location,"r") as f:
@@ -56,7 +56,30 @@ class db:
         self.i = (self.i + 1) % len(a)
         return a[self.i]
 
+    def db_lines(self,*,empty_files: bool = True):
+        '''
+        Returns the number of lines
+        of the file in self.location1.
+        If empty_files equals False, the
+        count will not include empty files.
+        '''
+        if isinstance(empty_files,bool) != True:
+            raise TypeError("empty_files must be a bool.")
+        with open(self.location,"r") as f:
+            a = f.readlines()
+        if empty_files == False:
+            try:
+                while True:
+                    del a[a.index([])]
+            except ValueError:
+                pass
+        return len(a)
+
     def one_liner_file(self):
+        '''
+        Generates an one line version
+        of the text of self.location1.
+        '''
         with open(self.location,"r") as f:
             a = f.readlines()
         a = "\\n".join(a)
@@ -78,7 +101,7 @@ class db:
             if isinstance(line, int) == True:
                 if line <= 0:
                     raise IndexError("The line has to be a natural number, not zero or negative.")
-                elif line > len(a):
+                elif line > len(a)+1:
                     raise MemoryError("There is no access to memory that has not been created.")
             
             if line == "all":
@@ -86,7 +109,7 @@ class db:
                     print(a[i])
                 return 0
             else:
-                print(a[line])
+                print(a[line-1])
 
     def read_all_by_line(self,*,loop=True):
         '''
@@ -156,7 +179,7 @@ class db:
                         i += 1
 
         except FileNotFoundError:
-            if location1 != None and (mode != "-s" and location1 == None):
+            if location1 != None or (mode != "-s" and location1 == None) or (location1 == None and data == -1):
                 print(f"Either file ({location1}) does not exist in your system or in the current directory.")
                 return 1
             data = (data, location1, 0)
