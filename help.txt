@@ -35,7 +35,6 @@ Gives permissions to the file the user who has the correct key_location and magi
 search(data_to_search (it can be a list or string),*, dir_location (by default it's None), times (by default it's 1, it must be either -1 or a non-zero natural number), amplitude (it must be either -1 or a natural number greater than len(data_to_search), list_format (by default it's True), mute (by default it's False)):
 - It searches for any instance of data_to_search elements (one or more key words) in dir_location (if it's None, it searches for self.location, but the file must exist either way).
 - It does that a number of <times> times (if -1, it will continue until there are no matches).
-- It makes a search every <amplitude> elements, with a range of <amplitude> indices (if -1, the amplitude will match the length of data_to_search()).
 - It can show the data depending on list_format (if will be printed if list_format equals 0, else the list will be returned as is.
 - You can control if you want to print the results or not, by putting mute = True or mute = False.
 
@@ -55,7 +54,6 @@ replace_all(*,data_to_search,replace_word,directory (by default, it's the folder
 - The result can be muted with mute equal to True.
 - It does not need admin.
 - It works the same as replace().
-
 
 delete(dir_location,*, key_location, magic_word):
 It deletes a specific file from dir_location. You need admin rights and you get them by introducing the correct key_location and magic_word.
