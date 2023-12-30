@@ -10,7 +10,11 @@ If <file> doesn't exist, the program will create one automatically.
 
 The available functions of the  last version of this program (27/Dec/2023) are:
 
-one_liner_file():
+db_lines(self,*,empty_files: bool = True):
+Returns the number of lines of the file in self.location1.
+If empty_files equals False, the count will not include empty files.
+
+one_liner_file(self):
 Returns an one-liner version of the file.
 
 read(self,*,line=<int var>)
@@ -63,6 +67,10 @@ make_dir(dir_location (must not exist beforehand)):
 It will create a new folder, you can use it to store data in folder and access the files more easily.
 
 After seeing what class db has to offer, there are more functions:
+
+def find2(a:str,b:str):
+Finds "b" string in "a" string.
+It's a faster and less restrictive version of re.search(), which is deprecated.
 
 change_main_dir(new_dir (must not exist beforehand)):
 It changes the main directory in which the program is working on.
